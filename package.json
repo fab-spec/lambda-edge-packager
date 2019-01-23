@@ -1,0 +1,17 @@
+{
+  "name": "@fab/lambda-edge-packager",
+  "version": "0.0.1",
+  "description": "A Front-end Application Bundle packager that generates AWS Lambda@Edge packages",
+  "main": "index.js",
+  "repository": "git@github.com:fab-spec/lambda-edge-packager.git",
+  "author": "Erwin van der Koogh",
+  "license": "MIT",
+  "dependencies": {
+    "deterministic-zip": "^1.0.5",
+    "extract-zip": "^1.6.7",
+    "nanoid": "^2.0.1",
+    "node-fetch": "^2.3.0",
+    "rimraf": "^2.6.3",
+    "tar": "^4.4.8"
+  }
+}
