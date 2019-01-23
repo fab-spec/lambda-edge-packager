@@ -40,7 +40,7 @@ const excludedHeaders = new Set([
   'x-forwarded-proto',
   'x-real-ip'
 ])
-const excludedHeaderPrefixes = [/^x-amz-cf-/i, /^x-amzn-/i, /^x-edge-/i]
+const excludedHeaderPrefixes = [/^x-amz-/i, /^x-amzn-/i, /^x-edge-/i]
 
 const transformHeadersFromFetch = (headers) => {
   const lambda_headers = {}
