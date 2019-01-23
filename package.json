@@ -6,6 +6,10 @@
   "repository": "git@github.com:fab-spec/lambda-edge-packager.git",
   "author": "Erwin van der Koogh",
   "license": "MIT",
+  "files": [
+    "index.js",
+    "shim.js"
+  ],
   "dependencies": {
     "deterministic-zip": "^1.0.5",
     "extract-zip": "^1.6.7",
