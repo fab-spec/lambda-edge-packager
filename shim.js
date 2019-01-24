@@ -24,6 +24,8 @@ const transformHeadersToFetch = (headers) => {
 
 const excludedHeaders = new Set([
   'cache-control',
+  'content-encoding',
+  'content-length',
   'connection',
   'expect',
   'keep-alive',
@@ -47,7 +49,6 @@ const excludedHeaderPrefixes = [/^x-amz-/i, /^x-amzn-/i, /^x-edge-/i]
 const transformHeadersFromFetch = (headers) => {
   const lambda_headers = {}
   for (let [header, value] of headers.entries()) {
-    console.log({ header, value })
     if (excludedHeaders.has(header.toLowerCase())) continue
     if (excludedHeaderPrefixes.some(prefix => prefix.exec(header))) continue
     lambda_headers[header.toLowerCase()] = [{ header, value }]
@@ -55,28 +56,35 @@ const transformHeadersFromFetch = (headers) => {
   return lambda_headers
 }
 
-const transformBody = (body) => {
-  if (typeof body === 'string') {
+const text_type = /^text\//i
+const transformBody = async (response) => {
+  const content_type = response.headers.get('content-type')
+  if(content_type && text_type.exec(content_type)) {
+    const body = await response.text()
     return { body, bodyEncoding: 'text' }
   } else {
-    return { body: body.toString('base64'), bodyEncoding: 'base64' }
+    const bytes = await response.arrayBuffer()
+    const body = Buffer.from(bytes).toString('base64')
+    return {body, bodyEncoding: 'base64'}
   }
+  
 }
 
 exports.handler = async (event) => {
+  console.log(JSON.stringify(event, null, 2))
   const cf_request = event.Records[0].cf.request
   const host = cf_request.headers.host[0].value
   const url = \`https://\${host}\${cf_request.uri}\`
   const headers = transformHeadersToFetch(cf_request.headers)
   console.log({ url, headers })
-  const fetch_request = new Request(url, {
+  const fetch_request = new global.Request(url, {
     method: cf_request.method,
     headers,
   })
 
   const fetch_response = await fab.render(fetch_request, prodSettings)
   console.log({ fetch_response })
-  const { body, bodyEncoding } = transformBody(fetch_response.body)
+  const { body, bodyEncoding } = await transformBody(fetch_response)
   const lambda_response = {
     status: '' + fetch_response.status,
     statusDescription: fetch_request.statusText,
@@ -88,4 +96,5 @@ exports.handler = async (event) => {
 
   return lambda_response
 }
+
 `
