@@ -49,6 +49,7 @@ const excludedHeaderPrefixes = [/^x-amz-/i, /^x-amzn-/i, /^x-edge-/i]
 const transformHeadersFromFetch = (headers) => {
   const lambda_headers = {}
   for (let [header, value] of headers.entries()) {
+
     if (excludedHeaders.has(header.toLowerCase())) continue
     if (excludedHeaderPrefixes.some(prefix => prefix.exec(header))) continue
     lambda_headers[header.toLowerCase()] = [{ header, value }]
@@ -56,7 +57,7 @@ const transformHeadersFromFetch = (headers) => {
   return lambda_headers
 }
 
-const text_type = /^text\//i
+const text_type = /^text/i
 const transformBody = async (response) => {
   const content_type = response.headers.get('content-type')
   if(content_type && text_type.exec(content_type)) {
