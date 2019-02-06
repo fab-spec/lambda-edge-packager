@@ -1,0 +1,131 @@
+{
+    "Records": [
+        {
+            "cf": {
+                "config": {
+                    "distributionDomainName": "d1aqr0b1ic0e75.cloudfront.net",
+                    "distributionId": "EV83H6206MUGF",
+                    "eventType": "origin-request"
+                },
+                "request": {
+                    "body": {
+                        "action": "read-only",
+                        "data": "eyJjb250aW51ZVRva2VuIjpudWxsLCJtZXRhZGF0YUlkIjpudWxsLCJzaG9ydGNvZGUiOiJCSm9jZ0FjNzciLCJhZGRpdGlvbmFsSW5mb3JtYXRpb24iOnsiZW1haWxBZGRyZXNzIjoiZ0BnLmNvbSIsImxvY2F0aW9uIjp7ImFkZHJlc3MiOiJNb29uZWUgUG9uZHMgVklDLCBBdXN0cmFsaWEiLCJ0eXBlIjoiUG9pbnQiLCJjb29yZGluYXRlcyI6WzE0NC45MTk5OTk5OTk5OTk5NiwtMzcuNzY1XX0sInBob25lTnVtYmVyIjoiMDQifSwiYW5zd2VycyI6eyIzIjoiMSIsIjYiOiIxIiwiMTIiOiIxIiwiMTgiOiIxIiwiMTkiOiIxIiwiMjciOiIzIiwiMzAiOiI0IiwiNDUiOiIzIiwiNDYiOiI0IiwiNDciOiI0IiwiNTgiOiI0IiwiNjIiOiI0IiwiNjMiOiI0IiwiNzAiOiI0IiwiNzYiOiI0IiwiNzkiOiI0IiwiODMiOiI0IiwiODUiOiI0IiwiOTAiOiI0IiwiOTUiOiI0IiwiOTciOiI0IiwiMTA0IjoiNCIsIjEwNSI6IjQiLCIxMjMiOiI0IiwiMTI2IjoiNCIsIjEzNiI6IjUifSwicmVzcG9uZGVudElkZW50aWZpZXIiOiJHIiwidGltZVRha2VuIjotMTU0OTM0MTE2MzgzOCwiY29uc2VudGVkQXQiOiIyMDE5LTAyLTA1VDA0OjMyOjQzLjgyMFoiLCJmcmVlVGV4dEFuc3dlckNvbGxlY3Rpb24iOltdfQ==",
+                        "encoding": "base64",
+                        "inputTruncated": false
+                    },
+                    "clientIp": "220.233.217.66",
+                    "headers": {
+                        "host": [
+                            {
+                                "key": "Host",
+                                "value": "cx.predictivehire.com"
+                            }
+                        ],
+                        "cloudfront-is-mobile-viewer": [
+                            {
+                                "key": "CloudFront-Is-Mobile-Viewer",
+                                "value": "false"
+                            }
+                        ],
+                        "cloudfront-is-tablet-viewer": [
+                            {
+                                "key": "CloudFront-Is-Tablet-Viewer",
+                                "value": "false"
+                            }
+                        ],
+                        "cloudfront-is-smarttv-viewer": [
+                            {
+                                "key": "CloudFront-Is-SmartTV-Viewer",
+                                "value": "false"
+                            }
+                        ],
+                        "cloudfront-is-desktop-viewer": [
+                            {
+                                "key": "CloudFront-Is-Desktop-Viewer",
+                                "value": "true"
+                            }
+                        ],
+                        "accept-language": [
+                            {
+                                "key": "Accept-Language",
+                                "value": "en-GB,en-US;q=0.9,en;q=0.8"
+                            }
+                        ],
+                        "user-agent": [
+                            {
+                                "key": "User-Agent",
+                                "value": "Amazon CloudFront"
+                            }
+                        ],
+                        "via": [
+                            {
+                                "key": "Via",
+                                "value": "1.1 af97886e43a8d376c5a74ede5075d68d.cloudfront.net (CloudFront)"
+                            }
+                        ],
+                        "content-length": [
+                            {
+                                "key": "Content-Length",
+                                "value": "619"
+                            }
+                        ],
+                        "x-forwarded-for": [
+                            {
+                                "key": "X-Forwarded-For",
+                                "value": "220.233.217.66"
+                            }
+                        ],
+                        "cloudfront-viewer-country": [
+                            {
+                                "key": "CloudFront-Viewer-Country",
+                                "value": "AU"
+                            }
+                        ],
+                        "origin": [
+                            {
+                                "key": "origin",
+                                "value": "https://cx.predictivehire.com"
+                            }
+                        ],
+                        "accept-encoding": [
+                            {
+                                "key": "accept-encoding",
+                                "value": "gzip, deflate, br"
+                            }
+                        ],
+                        "content-type": [
+                            {
+                                "key": "content-type",
+                                "value": "application/json;charset=UTF-8"
+                            }
+                        ],
+                        "authority": [
+                            {
+                                "key": "authority",
+                                "value": "predictive-hire-questionnaire-9dfbd154c-production.linc-preview.sh"
+                            }
+                        ]
+                    },
+                    "method": "POST",
+                    "origin": {
+                        "custom": {
+                            "customHeaders": {},
+                            "domainName": "cx.predictivehire.com",
+                            "keepaliveTimeout": 60,
+                            "path": "",
+                            "port": 443,
+                            "protocol": "https",
+                            "readTimeout": 30,
+                            "sslProtocols": [
+                                "TLSv1.2"
+                            ]
+                        }
+                    },
+                    "querystring": "",
+                    "uri": "/v3/responses"
+                }
+            }
+        }
+    ]
+}

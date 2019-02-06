@@ -22,6 +22,17 @@ const transformHeadersToFetch = (headers) => {
   return fetch_headers
 }
 
+const transformBodyToFetch = (body) => {
+  if (body) {
+    if (body.encoding === 'base64') {
+      return Buffer.from(body.data, body.encoding)
+    } else {
+      console.log('UNKNOWN ENCODING: ', body.encoding)
+    }
+  }
+  return null
+}
+
 const excludedHeaders = new Set([
   'cache-control',
   'content-encoding',
@@ -42,54 +53,51 @@ const excludedHeaders = new Set([
   'x-accel-redirect',
   'x-cache',
   'x-forwarded-proto',
-  'x-real-ip'
+  'x-real-ip',
 ])
 const excludedHeaderPrefixes = [/^x-amz-/i, /^x-amzn-/i, /^x-edge-/i]
-
 const transformHeadersFromFetch = (headers) => {
   const lambda_headers = {}
   for (let [header, value] of headers.entries()) {
-
     if (excludedHeaders.has(header.toLowerCase())) continue
-    if (excludedHeaderPrefixes.some(prefix => prefix.exec(header))) continue
+    if (excludedHeaderPrefixes.some((prefix) => prefix.exec(header))) continue
     lambda_headers[header.toLowerCase()] = [{ header, value }]
   }
   return lambda_headers
 }
 
 const text_type = /^text/i
-const transformBody = async (response) => {
+const transformResponseBody = async (response) => {
   const content_type = response.headers.get('content-type')
-  if(content_type && text_type.exec(content_type)) {
+  if (content_type && text_type.exec(content_type)) {
     const body = await response.text()
     return { body, bodyEncoding: 'text' }
   } else {
     const bytes = await response.arrayBuffer()
     const body = Buffer.from(bytes).toString('base64')
-    return {body, bodyEncoding: 'base64'}
+    return { body, bodyEncoding: 'base64' }
   }
-  
 }
 
 exports.handler = async (event) => {
   console.log(JSON.stringify(event, null, 2))
   const cf_request = event.Records[0].cf.request
   const host = cf_request.headers.host[0].value
+  const method = cf_request.method
   const url = \`https://\${host}\${cf_request.uri}\`
   const headers = transformHeadersToFetch(cf_request.headers)
-  console.log({ url, headers })
-  const fetch_request = new global.Request(url, {
-    method: cf_request.method,
-    headers,
-  })
+  const body = transformBodyToFetch(cf_request.body)
+  console.log({ url, method, headers, body })
+  const options =
+    body && method.toUpperCase() === 'GET' ? { method, headers } : { method, headers, body }
+  const fetch_request = new global.Request(url, options)
 
   const fetch_response = await fab.render(fetch_request, prodSettings)
-  console.log({ fetch_response })
-  const { body, bodyEncoding } = await transformBody(fetch_response)
+  const { res_body, bodyEncoding } = await transformResponseBody(fetch_response)
   const lambda_response = {
     status: '' + fetch_response.status,
     statusDescription: fetch_request.statusText,
-    body,
+    body: res_body,
     bodyEncoding,
     headers: transformHeadersFromFetch(fetch_response.headers),
   }
