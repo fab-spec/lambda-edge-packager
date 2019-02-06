@@ -93,7 +93,7 @@ exports.handler = async (event) => {
   const fetch_request = new global.Request(url, options)
 
   const fetch_response = await fab.render(fetch_request, prodSettings)
-  const { res_body, bodyEncoding } = await transformResponseBody(fetch_response)
+  const { body: res_body, bodyEncoding } = await transformResponseBody(fetch_response)
   const lambda_response = {
     status: '' + fetch_response.status,
     statusDescription: fetch_request.statusText,
