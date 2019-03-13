@@ -6,6 +6,9 @@ const fab = require('./server')
 
 const prodSettings = fab.getProdSettings ? fab.getProdSettings() : {}
 
+//Need to set this to work around a bug in a dependency of the webpack http(s) shim
+global.location = { protocol: 'https:' }
+
 global.fetch = fetch
 global.Request = fetch.Request
 global.Response = fetch.Response
