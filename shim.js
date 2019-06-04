@@ -1,10 +1,12 @@
-module.exports = `
+module.exports = (envSettings) => `
 'use strict'
 const URL = require('url').URL
 const fetch = require('node-fetch')
 const fab = require('./server')
 
 const prodSettings = fab.getProdSettings ? fab.getProdSettings() : {}
+const envSettings = ${JSON.stringify(envSettings)}
+const settings = Object.assign({}, prodSettings, envSettings)
 
 //Need to set this to work around a bug in a dependency of the webpack http(s) shim
 global.location = { protocol: 'https:' }
@@ -95,7 +97,7 @@ exports.handler = async (event) => {
     body && method.toUpperCase() === 'GET' ? { method, headers } : { method, headers, body }
   const fetch_request = new global.Request(url, options)
 
-  const fetch_response = await fab.render(fetch_request, prodSettings)
+  const fetch_response = await fab.render(fetch_request, settings)
   const { body: res_body, bodyEncoding } = await transformResponseBody(fetch_response)
   const lambda_response = {
     status: '' + fetch_response.status,

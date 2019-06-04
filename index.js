@@ -64,13 +64,13 @@ const zipAssets = async (output_dir, work_dir) => {
   await zip(work_dir, zipfile, { includes: ['./_assets/**'], cwd: work_dir })
 }
 
-const package = async (fab_file, output_dir) => {
+const package = async (fab_file, output_dir, settings = {}) => {
   await ensureDir(output_dir)
   const work_dir = path.join(output_dir, nanoid())
   await unzip_fab(fab_file, work_dir)
   await installNodeFetch(work_dir)
   await fixServerPath(work_dir)
-  fs.writeFileSync(path.join(work_dir, 'index.js'), shim)
+  fs.writeFileSync(path.join(work_dir, 'index.js'), shim(settings))
   await zipLambda(output_dir, work_dir)
   await zipAssets(output_dir, work_dir)
   await rimraf(work_dir, { glob: { cwd: output_dir } })
