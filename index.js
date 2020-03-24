@@ -9,8 +9,6 @@ const rimraf = promisify(require('rimraf'))
 const tar = require('tar')
 const unzip = promisify(require('extract-zip'))
 
-const shim = require('./shim.js')
-
 const ensureDir = (dir) => {
   console.log({ dir })
   if (!fs.existsSync(dir)) {
@@ -39,6 +37,25 @@ const fixServerPath = async (work_dir) => {
   }
 }
 
+const writeAssetSettings = async (work_dir, settings) => {
+  const contents = `module.exports = ${JSON.stringify(settings)}`
+  const filename = path.join(work_dir, 'asset_settings.js')
+  fs.writeFileSync(filename, contents, 'utf-8')
+}
+
+const writeEnvSettings = async (work_dir, settings) => {
+  const contents = `module.exports = ${JSON.stringify(settings)}`
+  const filename = path.join(work_dir, 'env_settings.js')
+  fs.writeFileSync(filename, contents, 'utf-8')
+}
+
+const copyIndex = async (work_dir) => {
+  const src = path.join(__dirname, 'shim.js')
+  const dest = path.join(work_dir, 'index.js')
+  console.log({ src, dest })
+  fs.copyFileSync(src, dest)
+}
+
 const installNodeFetch = async (work_dir) => {
   const node_modules_dir = path.join(work_dir, 'node_modules')
   await ensureDir(node_modules_dir)
@@ -54,7 +71,13 @@ const installNodeFetch = async (work_dir) => {
 const zipLambda = async (output_dir, work_dir) => {
   const zipfile = path.join(output_dir, 'lambda.zip')
   await zip(work_dir, zipfile, {
-    includes: ['./index.js', './server.js', './node_modules/**'],
+    includes: [
+      './index.js',
+      './asset_settings.js',
+      './env_settings.js',
+      './server.js',
+      './node_modules/**',
+    ],
     cwd: work_dir,
   })
 }
@@ -64,13 +87,27 @@ const zipAssets = async (output_dir, work_dir) => {
   await zip(work_dir, zipfile, { includes: ['./_assets/**'], cwd: work_dir })
 }
 
-const package = async (fab_file, output_dir, settings = {}) => {
+const default_asset_settings = {
+  domainName: 'static-assets.linc.sh',
+  keepaliveTimeout: 5,
+  path: '',
+  port: 443,
+  protocol: 'https',
+  readTimeout: 30,
+  sslProtocols: ['TLSv1.1', 'TLSv1.2'],
+}
+
+const package = async (fab_file, output_dir, env_settings = {}, asset_settings = {}) => {
+  asset_settings = Object.assign({}, default_asset_settings, asset_settings)
+
   await ensureDir(output_dir)
   const work_dir = path.join(output_dir, nanoid())
   await unzip_fab(fab_file, work_dir)
   await installNodeFetch(work_dir)
   await fixServerPath(work_dir)
-  fs.writeFileSync(path.join(work_dir, 'index.js'), shim(settings))
+  await writeAssetSettings(work_dir, asset_settings)
+  await writeEnvSettings(work_dir, env_settings)
+  await copyIndex(work_dir)
   await zipLambda(output_dir, work_dir)
   await zipAssets(output_dir, work_dir)
   await rimraf(work_dir, { glob: { cwd: output_dir } })
