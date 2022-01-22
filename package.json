@@ -13,7 +13,7 @@
   "dependencies": {
     "deterministic-zip": "^1.0.5",
     "extract-zip": "^1.6.7",
-    "nanoid": "^2.0.1",
+    "nanoid": "^3.1.31",
     "node-fetch": "^2.3.0",
     "rimraf": "^2.6.3",
     "tar": "^4.4.8"
