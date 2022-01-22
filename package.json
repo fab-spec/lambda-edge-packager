@@ -14,7 +14,7 @@
     "deterministic-zip": "^1.0.5",
     "extract-zip": "^1.6.7",
     "nanoid": "^2.0.1",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^3.1.1",
     "rimraf": "^2.6.3",
     "tar": "^4.4.8"
   }
